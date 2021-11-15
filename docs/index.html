@@ -176,20 +176,34 @@
 
         $.getJSON('./countries.json').done(addTopoData);
 
-        var mapbox_style = 'mapbox/streets-v11';
-        if (window.matchMedia &&
-            window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            mapbox_style = 'mapbox/dark-v10';
-        }
+        var bg;
+        function draw_bg() {
+            if (map.hasLayer(bg)) {
+                map.removeLayer(bg);
+            }
+            var mapbox_style = 'mapbox/streets-v11';
+            if (window.matchMedia &&
+                window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                mapbox_style = 'mapbox/dark-v10';
+            }
 
-        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            maxZoom: 18,
-            id: mapbox_style,
-            tileSize: 512,
-            zoomOffset: -1,
-            accessToken: 'pk.eyJ1IjoicnVzc3dlYXMiLCJhIjoiY2t2enR3OW9kMHJycTJvbHRsaDhzbTR0YiJ9.8Z7T4nZIoITtv9_efsA4iw'
-        }).addTo(map);
+            bg = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 18,
+                id: mapbox_style,
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: 'pk.eyJ1IjoicnVzc3dlYXMiLCJhIjoiY2t2enR3OW9kMHJycTJvbHRsaDhzbTR0YiJ9.8Z7T4nZIoITtv9_efsA4iw'
+            });
+            bg.addTo(map);
+        }
+        draw_bg();
+
+        window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .addEventListener("change", function (e) {
+                draw_bg();
+            });
         var world;
         function addTopoData(topoData) {
             topoLayer.addData(topoData);
