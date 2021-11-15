@@ -3,35 +3,22 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Maps with Leaflet,TopoJSON & Chroma.js</title>
+    <title>SeroSurveil</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
         crossorigin="" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-        }
-
-        body,
-        html,
-        #worldmap {
-            height: 100%;
-        }
-
-        body {
-            color: #333;
-            font-family: sans-serif;
-        }
-
         #worldmap {
             background: white;
+            height: 100%;
+            width: 100%;
         }
 
-        .country-name {
+        /* .country-name {
             position: absolute;
             top: 2em;
             right: 1em;
@@ -41,14 +28,97 @@
             padding: .5em .75em;
             font-size: .85em;
             display: none;
+        } */
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .fullheight {
+            height: 100%;
+        }
+
+        .fira {
+            font-family: 'Fira Sans', sans-serif;
+        }
+
+        .header {
+            background-color: #6ac8ee;
+            color: white;
+            margin: 0;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .column {
+            padding: 0;
+            margin: 0;
+            max-height: 100%;
+            height: 100%;
+        }
+
+        .columns {
+            padding: 0;
+            margin: 0;
         }
     </style>
 </head>
 
 <body>
+    <div class="columns fullheight">
+        <div class="column is-two-thirds fullheight">
+            <div id="worldmap"></div>
+        </div>
+        <div class="column">
+            <h1 class="title fira has-text-centered header">SeroSurveil</h1>
+            <div class="columns">
+                <div class="column p-3"><input class="input" type="text" placeholder="Disease"></div>
+                <div class="column p-3"><input class="input" type="text" placeholder="Country/Region"></div>
+            </div>
+            <div class="p-3">
 
-    <div id="worldmap"></div>
-    <div class="country-name"></div>
+            </div>
+            <div class="country-name p-3">
+                <section class="hero">
+                    <div class="hero-body">
+                        <p class="title has-text-centered">
+                            Welcome to SeroSurveil!
+                        </p>
+                        <p> To get started, explore the main map panel, or use the input fields above to
+                            search for a particular disease or geographic region.</p>
+                    </div>
+                </section>
+            </div>
+            <div class="section">
+                <h2 class="subtitle">About Serosurveil</h2>
+                <p>
+                    SeroSurveil is a project created to aggragate data about disease seroprevalence from thousands of
+                    disparate sources and find a way to make accessing that data as accessible as possible.
+                </p>
+            </div>
+            <div class="box m-2">
+                <b>Cite SeroSurveil:</b> Ponce-Macotela M, Martínez-Gordillo MN. Toxocara: Seroprevalence in Mexico. Adv
+                Parasitol. 2020;109:341-355. doi: 10.1016/bs.apar.2020.01.012. Epub 2020 Feb 5. PMID: 32381206.
+                <button class="button float">Copy</button>
+            </div>
+            <div class="p-3">
+                <em>Note: the content on this site is currently placeholder.</em>
+            </div>
+
+            <p>
+                SeroSurveil is an open-source project developed by Samantha Gabrielle Morgan, Brandon Lucas, and
+                Russell Weas. The source code is
+                licensed
+                <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
+                is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
+            </p>
+        </div>
+    </div>
+
     <script type="text/javascript" src="./us-states.js"></script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/0.5.9/chroma.min.js"></script>
@@ -75,9 +145,6 @@
         });
     </script>
     <script>
-
-
-
         var map = L.map('worldmap', { maxZoom: 10, minZoom: 3, worldCopyJump: true }),
             topoLayer = new L.TopoJSON(),
             $countryName = $('.country-name'),
@@ -124,6 +191,17 @@
         function backToWorld() {
             world.addTo(map);
             map.removeLayer(states);
+            $countryName.html(`<div class="country-name p-3">
+                <section class="hero">
+                    <div class="hero-body">
+                        <p class="title has-text-centered">
+                            Welcome to SeroSurveil!
+                        </p>
+                        <p> To get started, explore the main map panel, or use the input fields above to
+                            search for a particular disease or geographic region.</p>
+                    </div>
+                </section>
+            </div>`)
         }
 
         function style(feature) {
@@ -142,6 +220,17 @@
                 style: style,
                 onEachFeature: onEachFeature
             });
+            var countryName = this.feature.properties.name;
+
+            $countryName.html(`<section class="hero">
+                    <div class="hero-body">
+                        <p class="title has-text-centered">
+                            `+ countryName + `
+                        </p>
+                        <p> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                        <p> <a href="#" onClick="backToWorld()">Exit `+ countryName + `
+                        </div>
+                </section>`).show();
             states.addTo(map);
             map.removeLayer(world);
             leaveCountry = "United States";
@@ -179,11 +268,6 @@
         function enterLayer() {
             console.log(this.feature.properties)
             var countryName = this.feature.properties.name;
-            $countryName.text(countryName).show();
-
-            if (leaveCountry != "") {
-                $countryName.html("<a onClick='backToWorld()' href='#'>Exit " + countryName + "</a>")
-            }
 
             this.bringToFront();
             this.setStyle({
@@ -192,13 +276,13 @@
             });
         }
         function leaveLayer() {
-            $countryName.hide();
-
             this.bringToBack();
             this.setStyle({
                 weight: 1,
                 opacity: .5
             });
+
+
         }
 
     </script>
